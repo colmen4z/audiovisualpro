@@ -1,0 +1,1 @@
+<template>Gestion locaciones</template>
