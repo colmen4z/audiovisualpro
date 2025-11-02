@@ -1,7 +1,61 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import { Icon } from '@iconify/vue';
+import Toast from '../../../components/Toast.vue';
+import api from '../../../services/api.js'
 
-const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const isLoading = ref(false)
+
+const nombre_tipo = ref('')
+
+const tipos_proyecto = ref([])
+
+const createTipoProyecto = async () => {
+    isLoading.value = true
+
+    try {
+        const res = await api.post('/api/tiposproyecto', {
+            nombre_tipo:  nombre_tipo.value
+        })
+
+        console.log('Tipo de proyecto creado con exito: ', res.data)
+        tipos_proyecto.value.push(res.data)
+        nombre_tipo.value = ''
+    } catch (err) {
+        err.response ? console.error('Error al crear el tipo de proyecto: ', err.response.data) : console.error('Error al crear el tipo de proyecto: ', err)
+    } finally {
+        isLoading.value = false
+    }
+}
+
+const getTiposProyecto = async () => {
+    try {
+        const res = await api.get('/api/tiposproyecto')
+        tipos_proyecto.value = res.data
+        console.log('Tipos de proyecto obtenidos con exito: ', tipos_proyecto.value)
+    } catch (err) {
+        console.error('Error al obtener los tipos de proyecto: ', err)
+    }
+}
+
+const deleteTipoProyecto = async (id) => {
+    const confirmacion = confirm('Esta seguro/a que desea eliminar este tipo de proyecto?')
+    if (!confirmacion) return
+    isLoading.value = true
+
+    try {
+        await api.delete(`/api/tiposproyecto/${id}`)
+        tipos_proyecto.value = tipos_proyecto.value.filter(tipo => tipo.id_tipo_proyecto !== id)
+    } catch (err) {
+        console.error('Error al eliminar el tipo de proyecto: ', err)
+    } finally {
+        isLoading.value = false
+    }
+}
+
+onMounted(() => {
+    getTiposProyecto()
+})
 </script>
 
 <template>
@@ -10,13 +64,24 @@ const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
             <h3 class="text-center font-bold text-lg">Gestion de Tipos de Proyectos</h3>
         </div>
 
-        <div class="mb-3">
-            <div class="flex justify-end">
-                <button class="w-50 flex items-center text-center justify-center cursor-pointer bg-green-500 hover:bg-green-600 text-white font-semibold p-2 rounded-lg transition-colors">
-                    <Icon icon="material-symbols:add" width="25" height="25" class="mr-2" />
-                    Nuevo Tipo
-                </button>
-            </div>
+        <div class="mb-4 border-b border-gray-200 pb-3">
+            <p class="text-sm font-semibold text-gray-500 mb-1">Nuevo tipo</p>
+            <form @submit.prevent="createTipoProyecto">
+                <div class="flex space-x-2">
+                    <div class="relative flex-1">
+                        <input
+                            v-model="nombre_tipo"
+                            type="text"
+                            class="transition w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Crear tipo"
+                            required
+                        >
+                    </div>
+                    <button type="submit" class="w-50 flex items-center text-center justify-center cursor-pointer bg-green-500 hover:bg-green-600 text-white font-semibold p-2 rounded-lg transition-colors">
+                        <Icon icon="material-symbols:add" width="25" height="25" class="mr-2" />
+                        Crear Tipo
+                    </button>
+                </div>
+            </form>
         </div>
 
         <div class="mb-3">
@@ -32,12 +97,13 @@ const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                         class="transition w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Buscar tipo"
                     >
                 </div>
+                
             </div>
         </div>
 
         <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg min-h-[400px] max-h-[calc(100vh-240px)]">
             <div>
-                <table class="table-auto w-full">
+                <table v-if="tipos_proyecto.length > 0" class="table-auto w-full">
                     <thead>
                         <tr class="bg-green-100 text-green-900">
                             <th class="px-4 py-2 text-left">ID</th>
@@ -46,9 +112,9 @@ const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="array in arrayTest" :key="array" class="border-b border-green-100 hover:bg-green-50 transition">
-                            <td class="px-4 py-2">{{ array }}</td>
-                            <td class="px-4 py-2">Tipo {{ array }}</td>
+                        <tr v-for="tipos in tipos_proyecto" :key="tipos.id_tipo_proyecto" class="border-b border-green-100 hover:bg-green-50 transition">
+                            <td class="px-4 py-2">{{ tipos.id_tipo_proyecto }}</td>
+                            <td class="px-4 py-2">{{ tipos.nombre_tipo }}</td>
                             <td class="px-4 py-2 flex items-center gap-1">
                                 <button
                                     class="flex items-center text-center justify-center cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-semibold px-2 py-1 rounded-lg transition-colors"
@@ -57,6 +123,7 @@ const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                                     Editar
                                 </button>
                                 <button
+                                    @click="deleteTipoProyecto(tipos.id_tipo_proyecto)"
                                     class="flex items-center text-center justify-center cursor-pointer bg-red-500 hover:bg-red-600 text-white font-semibold px-2 py-1 rounded-lg transition-colors"
                                 >
                                     <Icon icon="material-symbols:delete" width="20" height="20" class="mr-2" />
@@ -66,7 +133,21 @@ const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                         </tr>
                     </tbody>
                 </table>
+                <div v-else>
+                    <div class="flex items-center justify-center text-center mt-3">
+                        <div class="flex text-[15px] font-semibold text-red-500 items-center justify-center w-full bg-red-100 border border-red-200 p-3 mx-3 rounded-xl shadow-md">
+                            <Icon icon="mdi:error" width="25" height="25" class="mr-2" />
+                            No hay tipos de proyectos creados.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <Toast
+            v-model="isLoading"
+            message="Creando tipo..."
+            type="loading"
+        />
     </div>
 </template>
