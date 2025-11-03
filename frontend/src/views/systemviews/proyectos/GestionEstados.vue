@@ -5,6 +5,7 @@ import api from '../../../services/api.js'
 import Toast from '../../../components/Toast.vue';
 
 const isLoading = ref(false)
+const loadingEstados = ref(false)
 
 const nombre_estado = ref('')
 
@@ -29,12 +30,16 @@ const createEstadoProyecto = async () => {
 }
 
 const getEstadosProyecto = async () => {
+    loadingEstados.value = true
+
     try {
         const res = await api.get('/api/estadosproyecto')
         estados_proyecto.value = res.data
         console.log('Estados de proyecto obtenidos con exito: ', estados_proyecto.value)
     } catch (err) {
         console.error('Error al obtener los estados de proyecto: ', err)
+    } finally {
+        loadingEstados.value = false
     }
 }
 
@@ -102,7 +107,15 @@ onMounted(() => {
 
         <div class="flex-1 overflow-y-auto border border-gray-200 rounded-lg min-h-[400px] max-h-[calc(100vh-240px)]">
             <div>
-                <table v-if="estados_proyecto.length > 0" class="table-auto w-full">
+                <div v-if="loadingEstados">
+                    <div class="flex items-center justify-center text-center mt-3">
+                        <div class="flex text-[15px] font-semibold text-blue-500 items-center justify-center w-full bg-blue-100 border border-blue-200 p-3 mx-3 rounded-xl shadow-md">
+                            <Icon icon="mdi:error" width="25" height="25" class="mr-2" />
+                            Cargando estados de proyectos...
+                        </div>
+                    </div>
+                </div>
+                <table v-else-if="estados_proyecto.length > 0" class="table-auto w-full">
                     <thead>
                         <tr class="bg-green-100 text-green-900">
                             <th class="px-4 py-2 text-left">ID</th>
