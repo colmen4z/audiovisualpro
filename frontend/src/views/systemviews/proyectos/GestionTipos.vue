@@ -146,7 +146,7 @@ onMounted(() => {
 
         <Toast
             v-model="isLoading"
-            message="Creando tipo..."
+            message="Conectando..."
             type="loading"
         />
     </div>

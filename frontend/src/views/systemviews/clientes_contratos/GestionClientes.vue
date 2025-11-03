@@ -1,7 +1,25 @@
 <script setup>
 import { Icon } from '@iconify/vue';
+import Modal from '../../../components/Modal.vue'
+import Toast from '../../../components/Toast.vue'
+import { ref } from 'vue'
 
-const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const arrayTest = Array.from({ length: 20 }, (_, i) => i + 1);
+
+const showModal = ref(false)
+const isLoading = ref(false)
+
+const createCliente = async () => {
+    isLoading.value = true
+
+    try {
+
+    } catch (err) {
+        console.error('Error al crear al cliente:', err);
+    } finally {
+        isLoading.value = false
+    }
+}
 </script>
 
 <template>
@@ -12,7 +30,7 @@ const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
         <div class="mb-3">
             <div class="flex justify-end">
-                <button class="w-50 flex items-center text-center justify-center cursor-pointer bg-green-500 hover:bg-green-600 text-white font-semibold p-2 rounded-lg transition-colors">
+                <button @click="showModal = true" class="w-50 flex items-center text-center justify-center cursor-pointer bg-green-500 hover:bg-green-600 text-white font-semibold p-2 rounded-lg transition-colors">
                     <Icon icon="mdi:account-add" width="25" height="25" class="mr-2" />
                     Nuevo Cliente
                 </button>
@@ -72,5 +90,18 @@ const arrayTest = [1, 2, 3, 4, 5, 6, 7, 8, 9];
                 </table>
             </div>
         </div>
+
+        <Modal
+            v-if="showModal" :show="showModal" @close="showModal = false"
+            title="Nuevo Cliente"
+        >
+            asd
+        </Modal>
+
+        <Toast
+            v-model="isLoading"
+            message="Conectando..."
+            type="loading"
+        />
     </div>
 </template>
