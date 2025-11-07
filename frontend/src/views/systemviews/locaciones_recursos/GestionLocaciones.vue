@@ -54,7 +54,17 @@
             </div>
 
             <form @submit.prevent="createLocacion" class="mb-2">
-
+                <div class="mb-2">
+                    <div class="flex flex-col mb-2">
+                        <label for="nombre" class="text-sm font-semibold text-gray-500 mb-1">Nombre</label>
+                        <input
+                            type="text"
+                            v-model="nombre_locacion"
+                            class="transition w-full border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+                            placeholder="Nombre"
+                        >
+                    </div>
+                </div>
             </form>
         </Modal>
 
@@ -72,6 +82,8 @@ import { Icon } from '@iconify/vue'
 import api from '../../../services/api.js'
 import Modal from "../../../components/Modal.vue"
 import Toast from '../../../components/Toast.vue'
+
+const locaciones = ref([])
 
 const showModal = ref(false)
 const isLoading = ref(false)
@@ -102,7 +114,22 @@ const createLocacion = () => {
     isLoading.value = true
 
     try {
-        
+        if (validarFormulario()) {
+            error.value = true
+            return
+        }
+        error.value = false
+
+        const res = await api.post('/api/locacion', {
+            nombre_locacion: nombre_locacion.value,
+            direccion: direccion.value,
+            descripcion_locacion: descripcion_locacion.value
+        })
+
+        console.log('Locacion creada con exito')
+        locaciones.value.push(res.data)
+        limpiarCampos()
+        showModal.value = false
     } catch (err) {
         console.error("Error al crear locacion: ", err)
     } finally {
