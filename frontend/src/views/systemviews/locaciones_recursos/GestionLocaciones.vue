@@ -110,7 +110,7 @@ const limpiarCampos = () => {
     descripcion_locacion.value = ''
 }
 
-const createLocacion = () => {
+const createLocacion = async () => {
     isLoading.value = true
 
     try {
