@@ -48,8 +48,6 @@ const onFileChange = (e) => {
 	const f = e.target.files && e.target.files[0]
 	if (f) {
 		file.value = f
-		// Clear link when user selects a file (optional behavior)
-		// fileLink.value = ''
 	} else {
 		file.value = null
 	}
