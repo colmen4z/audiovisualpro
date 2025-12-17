@@ -50,18 +50,18 @@
                     </div>
                     <div class="flex gap-2 mt-4">
                         <button
-                            class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors gap-1 w-full"
+                            class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold cursor-pointer px-4 py-2 rounded-lg transition-colors gap-1 w-full"
                             @click="editarPersonal(persona)">
                             <Icon icon="material-symbols:edit" width="20" height="20" /> Editar
                         </button>
                         <button
-                            class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors gap-1 w-full"
+                            class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer px-4 py-2 rounded-lg transition-colors gap-1 w-full"
                             @click="requestDeletePersonal(persona.idpersonal)">
                             <Icon icon="material-symbols:delete" width="20" height="20" /> Eliminar
                         </button>
                     </div>
                     <button
-                        class="mt-3 flex items-center justify-center bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg px-4 py-2 transition-colors w-full"
+                        class="mt-3 flex items-center justify-center bg-yellow-400 hover:bg-yellow-500 text-gray-900 cursor-pointer font-bold rounded-lg px-4 py-2 transition-colors w-full"
                         @click="mostrarDetalles(persona)">
                         <Icon icon="material-symbols:info-outline" width="18" height="18" class="mr-2" /> Ver Detalles
                     </button>
@@ -346,22 +346,26 @@ const guardarPersonal = async () => {
         telefono: p.telefono
     }
 
+    let toastMsj = ''
+
     try {
         if (esEdicion.value) {
             const { data } = await api.put(`/api/personal/${personaEditandoId.value}`, payload)
             const actualizado = mapBackendToLocal(data)
             const idx = personal.value.findIndex(per => per.idpersonal === personaEditandoId.value)
-            if (idx !== -1) personal.value[idx] = actualizado
+            if (idx !== -1) personal.value[idx] = actualizado;
+            toastMsj = 'Personal editado con exito.'
         } else {
             const { data } = await api.post('/api/personal', payload)
             personal.value.push(mapBackendToLocal(data))
+            toastMsj = 'Personal creado con exito.'
         }
 
         modalNuevoPersonal.value = false
         personaEditandoId.value = null
         limpiarCampos()
         showModal.value = false
-        displayToast('Personal creado con exito', 'success')
+        displayToast(toastMsj, 'success')
     } catch (err) {
         console.error(err)
         displayToast('No se pudo guardar el personal', 'error')

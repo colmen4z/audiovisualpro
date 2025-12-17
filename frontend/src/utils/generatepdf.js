@@ -116,7 +116,7 @@ export function generateReportePDF(pagos, gastos, totalPagos, totalGastos) {
     doc.setFontSize(8);
     doc.text(`Generado el: ${fechaReporte}`, 10, 280, { align: 'left' });
 
-    doc.save('Reporte_Freestyle_Personalizado.pdf');
+    doc.save('Reporte_Financiero.pdf');
 }
 
 export function generateTestPDF() {

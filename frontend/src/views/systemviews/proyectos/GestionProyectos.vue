@@ -79,6 +79,11 @@ const formatearFecha = (fecha) => {
     })
 }
 
+const faltaPersonal = computed(() => {
+    if (!proyectoSeleccionado.value?.id_proyecto) return false;
+    return asignacionesPersonal.value.length === 0
+})
+
 const limpiarCampos = () => {
     nombre_proyecto.value = ''
     id_tipo_proyecto.value = null
@@ -566,6 +571,7 @@ onMounted(() => {
                                 :presupuesto="proyecto.presupuesto"
                                 :locacionesAsignadas="proyecto.lista_locaciones"
                                 :recursosAsignados="proyecto.recursos_asignados"
+                                :personalAsignado="proyecto.total_personal"
                                 @verDetalles="abrirDetalles(proyecto)" />
                         </div>
                     </div>

@@ -120,7 +120,6 @@ onMounted(() => {
                             <th class="px-4 py-2 text-left font-bold">Cliente Contratante</th>
                             <th class="px-4 py-2 text-left font-bold">Fecha Firma</th>
                             <th class="px-4 py-2 text-right font-bold">Monto Total</th>
-                            <th class="px-4 py-2 text-center font-bold">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -146,17 +145,6 @@ onMounted(() => {
                             
                             <td class="px-4 py-3 text-right font-bold text-green-600">
                                 {{ formatearMoneda(contrato.monto_contrato) }}
-                            </td>
-                            
-                            <td class="px-4 py-3 flex justify-center gap-2">
-                                <button title="Ver Detalles"
-                                    class="p-1.5 text-blue-500 hover:bg-blue-50 rounded transition">
-                                    <Icon icon="clarity:details-solid" width="20" />
-                                </button>
-                                <button title="Eliminar"
-                                    class="p-1.5 text-red-500 hover:bg-red-50 rounded transition">
-                                    <Icon icon="material-symbols:delete" width="20" />
-                                </button>
                             </td>
                         </tr>
                     </tbody>

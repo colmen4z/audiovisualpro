@@ -9,7 +9,8 @@ const props = defineProps({
     fechaFinEstimada: { type: String, required: true, default: ''},
     presupuesto: { type: Number, required: true, default: 0 },
     locacionesAsignadas: { type: Array, required: false, default: () => [] },
-    recursosAsignados: { type: Array, required: false, default: () => [] }
+    recursosAsignados: { type: Array, required: false, default: () => [] },
+    personalAsignado: { type: Array, required: false, default: () => [] }
 })
 
 const emit = defineEmits(['verDetalles', 'editar', 'eliminar'])
@@ -50,11 +51,11 @@ const verDetalles = () => {
                         <p class="font-bold text-gray-700 mb-1">Estado:</p>
 
                         <div
-                            v-if="locacionesAsignadas?.length > 0 && recursosAsignados?.length > 0"
+                            v-if="locacionesAsignadas?.length > 0 && recursosAsignados?.length > 0 && personalAsignado?.length > 0"
                             class="flex items-center gap-1 p-2 rounded bg-green-100 text-green-700 text-sm font-medium"
                         >
                             <Icon icon="mdi:check-circle-outline" width="18" height="18" />
-                            Todo está bien.
+                            Sin detalles. Toda la informacion esta correcta.
                         </div>
 
                         <div
@@ -69,6 +70,8 @@ const verDetalles = () => {
                                 <li v-if="locacionesAsignadas?.length === 0">Asignar al menos una locación.</li>
 
                                 <li v-if="recursosAsignados?.length === 0">Asignar al menos un recurso técnico.</li>
+
+                                <li v-if="personalAsignado?.length === 0">Asignar por lo menos un personal al proyecto.</li>
                             </ul>
                             <p class="font-bold">Vaya a 'Ver Detalles' para asi poder asignarlos.</p>
                         </div>

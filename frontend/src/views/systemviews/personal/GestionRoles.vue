@@ -35,19 +35,19 @@
                     <div class="flex flex-col gap-2 mt-4">
                         <div class="flex gap-2">
                             <button
-                                class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors gap-1 w-full"
+                                class="flex items-center justify-center bg-yellow-400 hover:bg-yellow-500 text-black cursor-pointer font-semibold px-4 py-2 rounded-lg transition-colors gap-1 w-full"
                                 @click="mostrarDetalles(rol)">
                                 <Icon icon="material-symbols:info-outline" width="20" height="20" class="mr-1" /> Ver
                                 Detalles
                             </button>
                             <button
-                                class="flex items-center justify-center bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-4 py-2 rounded-lg transition-colors gap-1 w-full"
+                                class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white cursor-pointer font-semibold px-4 py-2 rounded-lg transition-colors gap-1 w-full"
                                 @click="abrirEditarRol(rol)">
                                 <Icon icon="material-symbols:edit" width="20" height="20" /> Editar
                             </button>
                         </div>
                         <button
-                            class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg transition-colors gap-1 w-full"
+                            class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer px-4 py-2 rounded-lg transition-colors gap-1 w-full"
                             @click="eliminarRol(rol.id_rol)">
                             <Icon icon="material-symbols:delete" width="20" height="20" /> Eliminar
                         </button>
